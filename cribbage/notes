@@ -1,0 +1,48 @@
+oBo oD o o o
+A
+o o o  o o o
+
+o o o  o o o
+
+o o o  o o o
+
+o o o  o o o
+C
+
+o o o  o o o
+...
+
+Inputs:
+Board Width
+Board Height
+Peg Diameter
+
+ -- Board Margin - lets not use this in calcs
+
+D = nB
+C = mA
+A = B
+
+Board Length = 
+GAMES + HEIGHT_MINOR + 7 * HEIGHT_GROUP + HEIGHT_MAJOR
+
+Board Width  =
+3 * WIDTH_GROUP
+
+somehow need ratio of width to height for HEIGHT_MAJOR
+and HEIGHT_MINOR
+
+HEIGHT_MAJOR calcs:
+outer_radius = 3 * peg_diameter + 2*peg_spacing + horiz_spacing - group_spacing / 2 - peg_diameter / 2 + peg_diameter + peg_spacing
+
+group_width = 3 peg_diameter + 2 peg_spacing + horiz_spacing
+
+group_width = 3 P + 2 A + D
+outer_radius = 
+
+outer_radius = group_width - group_spacing / 2 - peg_diameter / 2 + peg_diamter + peg_spacing
+
+width = radius + group_spacing / 2 ??
+(I can't make the spacing in the middle too large it'll look ridiculous)
+
+This means that the ratio of the radius thing is 1:2+spacing: wchich means i should be able to figure out everything else..
