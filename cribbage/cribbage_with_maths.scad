@@ -9,6 +9,7 @@ as = 3;
 vs = 1;
 qs = 5;
 
+
 // Output
 s = (h - w/2 - 1.5*d) / (7.5*gs+28+4*vs+0.5*as+qs);
 g = s * gs;
@@ -16,15 +17,23 @@ a = s * as;
 v = s * vs;
 q = s * qs;
 
+X = (w-g)/2;
+
 G = 4*s+g;
 A = 2*v+a;
 
-module group(t=[0,0,0]) {
+module row(t=[0,0,0]) {
   translate(t) {
     for(x = [0:2])
-      for(y = [0:4])
-        translate([x*v, y*s, 0])
-          circle(d=d);
+      translate([x*v, 0, 0])
+        circle(d=d);
+  }
+}
+
+module group(t=[0,0,0]) {
+  translate(t) {
+    for(y = [0:4])
+      row(t=[0,y*s,0]);
   }
 }
 
@@ -36,4 +45,33 @@ module lanes(t=[0,0,0]) {
   }
 }
 
-lanes();
+module half_circle(t=[0,0,0]) {
+  translate(t) {
+    for(o = [0:5])
+      rotate([0,0,-18*o])
+        row([-X, 0, 0]);
+  }
+}
+
+module upper_circle(t=[0,0,0]) {
+  translate(t) {
+    //right half
+    translate([-g/2, 0, 0])
+      half_circle();
+    //left half
+    translate([g/2, 0, 0])
+      rotate([0, 180, 0])
+        half_circle();
+  }
+}
+
+module lower_circle(t=[0,0,0]) {
+  
+}
+
+module all_holes(t=[0,0,0]) {
+  lanes();
+  //upper_circle(t=[w/2,-x-5,0]);
+}
+
+all_holes();
