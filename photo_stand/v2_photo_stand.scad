@@ -70,7 +70,7 @@ module frame_outline() {
 
 module frame_corners() {
   intersection() {
-    corners();
+    #corners();
     frame_box();
   }
 }
@@ -91,7 +91,7 @@ difference() {
     }
     frame_corners();
   }
-  #cube([slot_width, slot_height, slot_thickness], center=true);
+  cube([slot_width, slot_height, slot_thickness], center=true);
 }
 
 
