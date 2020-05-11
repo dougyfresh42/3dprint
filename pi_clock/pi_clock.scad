@@ -49,7 +49,7 @@ cutout_width = 18;
 module faceplate(thck) {
   translate([0, 0, thck/2])
   difference() {
-    cube([total_width, pi_height, thck], center=true);
+    cube([total_width+0.2, pi_height+0.2, thck], center=true);
     translate([display_x_off, display_y_off, 0])
       cube([screen_width, screen_height, thck + 0.2], center=true);
   }
@@ -173,13 +173,15 @@ module walls(height) {
 }
 
 module front_part() {
+  union(){
   faceplate(wall_thickness);
-  translate([0, 0, wall_thickness])
+  translate([0, 0, wall_thickness-0.01])
     display_surround(display_depth+wall_thickness);
-  translate([0, 0, wall_thickness + display_depth])
+  translate([0, 0, wall_thickness + display_depth-0.01])
     corners(display_width+wlls, display_height+wlls, wall_thickness, 10, [0,1,1,0]);
   posts(total_depth+wlls);
   walls(total_depth+wlls);
+  }
 }
 
 module back_plate(thck) {
@@ -195,6 +197,6 @@ module back_part() {
   back_plate(wall_thickness);
 }
 
-front_part();
-translate([0,0,total_depth+wall_thickness])
-back_part();
+//front_part();
+//translate([0,0,total_depth+wall_thickness])
+//back_part();
