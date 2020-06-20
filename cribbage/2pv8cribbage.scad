@@ -1,12 +1,19 @@
 // Ugh this is taking too long
 $fn=20;
 
+//TODO
+// Currently padding is edge to edge, not edge to pin_center
+//  All of the other spaces are center to center which makes math easier
+//  : fix padding
+
 ////////////////////////////
 // Change These Variables //
 ////////////////////////////
 
 real_width = 2.5 * 25.4;
 real_height = 11.125 * 25.4;
+
+thickness = 10;
 
 // 3.2 diam pin (1/8) (standard)
 pin_diam = 3.2;
@@ -31,9 +38,12 @@ col_space = 5.3;
 width = real_width - 2*padding - pin_diam;
 height = real_height - 2*padding - pin_diam;
 
+
 module peg(x, y) {
-  translate([x, y, 0])
-    circle(d=pin_diam);
+  //translate([x, y, 0])
+  //  circle(d=pin_diam);
+  translate([x, y, -1])
+    cylinder(d=pin_diam, h=thickness+2);
 }
 
 
@@ -98,32 +108,56 @@ module small_circle() {
 module start_holes() {
   for(i = [0:1]) {
     peg(i * col_space, 0);
-    peg(i * col_space, sbig_rad/2);
-    peg(i * col_space, sbig_rad);
+    peg(i * col_space, peg_space);
+    //peg(i * col_space, sbig_rad/2);
+    //peg(i * col_space, sbig_rad);
   }
 }
 
-translate([0, sbig_rad+group_space, 0]) {
-  translate([width/2, 7*(group_height + group_space), 0])
-    top_arc();
-
-  translate([2*group_width+3*side_space/2, -group_space, 0])
-    small_circle();
-
-  groups();
-
-  translate([0, -sbig_rad-group_space, 0])
-    start_holes();
+module win_hole() {
+  x = big_rad + group_space / 2;
+  y = sbig_rad + 8 * group_space + 7 * group_height;
+  peg(x, y);
 }
 
-offset = padding + pin_diam / 2;
-translate([-offset, -offset, -10])
-#  cube([real_width, real_height, 5]);
+module all_holes() {
+  translate([0, sbig_rad+group_space, 0]) {
+    translate([width/2, 7*(group_height + group_space), 0])
+      top_arc();
+
+    translate([2*group_width+3*side_space/2, -group_space, 0])
+      small_circle();
+
+    groups();
+
+    translate([0, -sbig_rad-group_space, 0])
+      start_holes();
+  }
+
+  win_hole();
+}
+
+side_offset = padding + pin_diam / 2;
 
 total_height = big_rad + 
                7 * group_height + 
                8 * group_space + 
                sbig_rad;
+
+length_offset = (real_height - total_height) / 2;
+
+/////////////////
+// Board build //
+/////////////////
+
+module board() {
+  difference() {
+    translate([-side_offset, -length_offset, 0])
+      cube([real_width, real_height, thickness]);
+
+    all_holes();
+  }
+}
 
 echo("Min pin");
 echo(med_rad * (PI/180) * 22.5 - pin_diam);
